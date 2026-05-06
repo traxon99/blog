@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Loading... — Jackson Yanek</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <header>
+    <h1><a href="index.html">jackson yanek</a></h1>
+    <p class="tagline">thoughts, notes, and things i've built</p>
+    <nav>
+      <a href="index.html">blog</a>
+      <a href="https://github.com/traxon99" target="_blank" rel="noopener">github</a>
+    </nav>
+  </header>
+
+  <main>
+    <article>
+      <div id="post-content" class="post-content">
+        <p style="color: var(--color-muted)">loading...</p>
+      </div>
+    </article>
+
+    <a class="back-link" href="index.html">&larr; back to posts</a>
+  </main>
+
+  <footer>
+    <p>jackson yanek &mdash; <a href="https://github.com/traxon99" target="_blank" rel="noopener">github</a></p>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script>
+    (async () => {
+      const params = new URLSearchParams(location.search);
+      const slug = params.get("post");
+
+      if (!slug) {
+        document.getElementById("post-content").innerHTML =
+          '<p style="color:var(--color-muted)">no post specified.</p>';
+        return;
+      }
+
+      // Sanitize slug — only allow alphanumeric, hyphens, underscores
+      if (!/^[a-z0-9_-]+$/i.test(slug)) {
+        document.getElementById("post-content").innerHTML =
+          '<p style="color:var(--color-muted)">invalid post.</p>';
+        return;
+      }
+
+      let text;
+      try {
+        const res = await fetch(`posts/${slug}.md`);
+        if (!res.ok) throw new Error(res.status);
+        text = await res.text();
+      } catch {
+        document.getElementById("post-content").innerHTML =
+          '<p style="color:var(--color-muted)">post not found.</p>';
+        return;
+      }
+
+      // Parse optional front matter: lines at top between --- delimiters
+      // Supports: title, date
+      let title = slug;
+      let date = "";
+      const fmMatch = text.match(/^---\n([\s\S]*?)\n---\n([\s\S]*)$/);
+      if (fmMatch) {
+        const fm = fmMatch[1];
+        text = fmMatch[2];
+        const titleMatch = fm.match(/^title:\s*(.+)$/m);
+        const dateMatch  = fm.match(/^date:\s*(.+)$/m);
+        if (titleMatch) title = titleMatch[1].trim();
+        if (dateMatch)  date  = dateMatch[1].trim();
+      }
+
+      document.title = `${title} — Jackson Yanek`;
+
+      const header = `<div class="post-header"><h1>${title}</h1>${
+        date ? `<span class="post-date">${date}</span>` : ""
+      }</div>`;
+
+      marked.use({ gfm: true, breaks: false });
+      document.getElementById("post-content").innerHTML =
+        header + marked.parse(text);
+    })();
+  </script>
+
+</body>
+</html>
