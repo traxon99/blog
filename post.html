@@ -9,12 +9,12 @@
 <body>
 
   <header>
-    <h1><a href="https://blog.jacksonyanek.com">blog</a></h1>
+    <h1><a href="index.html">blog</a></h1>
     <p class="tagline">thoughts, notes, and things i've built</p>
     <nav>
     <nav>
       <a href="https://jacksonyanek.com">home</a>
-      <a href="https://blog.jacksonyanek.com">blog</a>
+      <a href="index.html">blog</a>
       <a href="https://github.com/traxon99" target="_blank" rel="noopener">github</a>
     </nav>
   </header>
@@ -83,7 +83,18 @@
         date ? `<span class="post-date">${date}</span>` : ""
       }</div>`;
 
-      marked.use({ gfm: true, breaks: false });
+      marked.use({
+        gfm: true,
+        breaks: false,
+        renderer: {
+          image({ href, title, text }) {
+            // Resolve relative image paths relative to posts/ since the markdown lives there
+            const src = /^https?:\/\/|^\//.test(href) ? href : `posts/${href}`;
+            const titleAttr = title ? ` title="${title}"` : "";
+            return `<img src="${src}" alt="${text}"${titleAttr}>`;
+          }
+        }
+      });
       document.getElementById("post-content").innerHTML =
         header + marked.parse(text);
     })();
