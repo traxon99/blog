@@ -83,7 +83,18 @@
         date ? `<span class="post-date">${date}</span>` : ""
       }</div>`;
 
-      marked.use({ gfm: true, breaks: false });
+      marked.use({
+        gfm: true,
+        breaks: false,
+        renderer: {
+          image({ href, title, text }) {
+            // Resolve relative image paths relative to posts/ since the markdown lives there
+            const src = /^https?:\/\/|^\//.test(href) ? href : `posts/${href}`;
+            const titleAttr = title ? ` title="${title}"` : "";
+            return `<img src="${src}" alt="${text}"${titleAttr}>`;
+          }
+        }
+      });
       document.getElementById("post-content").innerHTML =
         header + marked.parse(text);
     })();
