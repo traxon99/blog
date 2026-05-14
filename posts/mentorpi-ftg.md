@@ -21,7 +21,7 @@ From the lovely folks at UPENN:
 
 <img src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fm.media-amazon.com%2Fimages%2FI%2F51Irv27G4FL._AC_SL1200_.jpg&f=1&nofb=1&ipt=5a8c205d3817495e92fa8b8c83cbb0175166fe8643d73497322a39ba23f8daa4" width="200" height="150" alt="Hiwonder Robot">
 
-This Hiwonder robot was one of the worst robots I've ever worked on in my life (I've maybe worked on a handful). The robot came preoloaded with a bunch of bloated example code. And the kicker: **They have little to no documentation on how the actual robot works!!** 
+This Hiwonder robot was one of the worst robots I've ever worked on in my life (I've maybe worked on a handful). The robot came preloaded with a bunch of bloated example code. And the kicker: **They have little to no documentation on how the actual robot works!!** 
 
 ## IV. Results and Code
 
